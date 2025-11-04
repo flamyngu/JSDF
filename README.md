@@ -1,46 +1,152 @@
-# Getting Started with Create React App
+Japan Self-Defense Forces – Organigramm
+Eine interaktive Visualisierung der Organisationsstruktur der Japan Self-Defense Forces (JSDF) mit hierarchischem Baumdiagramm.
+📋 Überblick
+Dieses Projekt zeigt die militärische Organisationsstruktur der JSDF in einer interaktiven D3.js-Visualisierung. Die Daten werden aus einer SQLite-Datenbank geladen und als zoombare, hierarchische Baumstruktur dargestellt.
+Branches (Teilstreitkräfte)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🟢 Ground Self-Defense Force (Landstreitkräfte) - Grün
+🔵 Maritime Self-Defense Force (Seestreitkräfte) - Blau
+🟠 Air Self-Defense Force (Luftstreitkräfte) - Orange
 
-## Available Scripts
+🚀 Installation
+Voraussetzungen
 
-In the project directory, you can run:
+Node.js (v14 oder höher)
+npm oder yarn
 
-### `npm start`
+Backend Setup
+bashcd backend
+npm install
+Frontend Setup
+bashcd frontend
+npm install
+📦 Abhängigkeiten
+Backend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+express - Web-Framework
+sqlite3 - Datenbank
+cors - Cross-Origin Resource Sharing
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Frontend
 
-### `npm test`
+react - UI-Framework
+typescript - Typsicherheit
+d3 - Datenvisualisierung
+vite - Build-Tool
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+🗃️ Datenbankstruktur
+Die SQLite-Datenbank enthält drei Tabellen:
+Branch
 
-### `npm run build`
+id - Eindeutige ID
+name - Name der Teilstreitkraft
+description - Beschreibung
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Unit
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+id - Eindeutige ID
+name - Name der Einheit
+type - Typ (Command, Division, Brigade, Wing, etc.)
+parent_unit_id - Referenz zur übergeordneten Einheit
+branch_id - Referenz zur Teilstreitkraft
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Personnel
 
-### `npm run eject`
+id - Eindeutige ID
+name - Name des Offiziers
+rank - Rang
+position - Position/Funktion
+unit_id - Referenz zur Einheit
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+🎯 Verwendung
+1. Datenbank initialisieren
+Beim ersten Start des Backend-Servers wird automatisch die Datenbank erstellt und mit Daten aus schema.sql gefüllt.
+Wichtig: Falls Probleme auftreten:
+bash# Datenbank zurücksetzen
+rm database.db
+2. Backend starten
+bashcd backend
+node server.js
+Der Server läuft auf http://localhost:4000
+3. Frontend starten
+bashcd frontend
+npm run dev
+Das Frontend ist erreichbar unter http://localhost:5173
+🎨 Features
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Interaktives Zoomen & Scrollen - Navigiere durch die große Hierarchie
+Farbcodierung nach Branch - Sofortige visuelle Unterscheidung der Teilstreitkräfte
+Hover-Tooltips - Zusätzliche Informationen beim Überfahren von Nodes
+Hierarchische Darstellung - Klare Visualisierung der Kommandostruktur
+Responsive Layout - Passt sich verschiedenen Bildschirmgrößen an
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+📊 API-Endpunkte
+GET /units
+Gibt alle militärischen Einheiten zurück.
+Response:
+json[
+  {
+    "id": 1,
+    "name": "Ground Component Command",
+    "type": "Command",
+    "parent_unit_id": null,
+    "branch_id": 1
+  }
+]
+GET /branches
+Gibt alle Teilstreitkräfte zurück.
+Response:
+json[
+  {
+    "id": 1,
+    "name": "Japan Ground Self-Defense Force",
+    "description": "Landstreitkräfte der JSDF"
+  }
+]
+🛠️ Entwicklung
+Projekt-Struktur
+.
+├── backend/
+│   ├── server.js          # Express-Server
+│   ├── schema.sql         # Datenbankschema & Daten
+│   └── database.db        # SQLite-Datenbank (generiert)
+│
+└── frontend/
+    ├── src/
+    │   ├── App.tsx        # Hauptkomponente mit D3-Visualisierung
+    │   ├── main.tsx       # React-Einstiegspunkt
+    │   └── index.css      # Globale Styles
+    └── package.json
+Datenbank neu initialisieren
+bashcd backend
+rm database.db
+node server.js
+Debugging
+Die Frontend-Konsole zeigt detaillierte Logs:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Geladene Units
+Hierarchie-Aufbau
+Rendering-Status
 
-## Learn More
+🐛 Troubleshooting
+"Fehler beim Erstellen des Organigramms: cycle"
+Die Datenbank enthält zyklische Referenzen. Lösung:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Backend stoppen
+database.db löschen
+Backend neu starten
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+"Keine Units gefunden"
+Backend-Server läuft nicht oder falsche URL. Überprüfe:
+
+Ist der Server auf Port 4000 gestartet?
+Gibt http://localhost:4000/units Daten zurück?
+
+CORS-Fehler
+Stelle sicher, dass das Backend mit aktiviertem CORS läuft.
+📝 Lizenz
+Dieses Projekt dient zu Bildungszwecken und ist frei verwendbar.
+👥 Autoren
+Entwickelt für die Visualisierung militärischer Organisationsstrukturen.
+
+Hinweis: Die dargestellten Daten sind vereinfacht und dienen nur zu Demonstrationszwecken.
