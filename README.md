@@ -1,90 +1,116 @@
-Japan Self-Defense Forces – Organigramm
+# Japan Self-Defense Forces – Organigramm
+
 Eine interaktive Visualisierung der Organisationsstruktur der Japan Self-Defense Forces (JSDF) mit hierarchischem Baumdiagramm.
-📋 Überblick
+
+## 📋 Überblick
+
 Dieses Projekt zeigt die militärische Organisationsstruktur der JSDF in einer interaktiven D3.js-Visualisierung. Die Daten werden aus einer SQLite-Datenbank geladen und als zoombare, hierarchische Baumstruktur dargestellt.
-Branches (Teilstreitkräfte)
 
-🟢 Ground Self-Defense Force (Landstreitkräfte) - Grün
-🔵 Maritime Self-Defense Force (Seestreitkräfte) - Blau
-🟠 Air Self-Defense Force (Luftstreitkräfte) - Orange
+### Branches (Teilstreitkräfte)
 
-🚀 Installation
-Voraussetzungen
+- 🟢 **Ground Self-Defense Force** (Landstreitkräfte) - Grün
+- 🔵 **Maritime Self-Defense Force** (Seestreitkräfte) - Blau  
+- 🟠 **Air Self-Defense Force** (Luftstreitkräfte) - Orange
 
-Node.js (v14 oder höher)
-npm oder yarn
+## 🚀 Installation
 
-Backend Setup
-bashcd backend
+### Voraussetzungen
+
+- Node.js (v14 oder höher)
+- npm oder yarn
+
+### Backend Setup
+```bash
+cd backend
 npm install
-Frontend Setup
-bashcd frontend
+```
+
+### Frontend Setup
+```bash
+cd frontend
 npm install
-📦 Abhängigkeiten
-Backend
+```
 
-express - Web-Framework
-sqlite3 - Datenbank
-cors - Cross-Origin Resource Sharing
+## 📦 Abhängigkeiten
 
-Frontend
+### Backend
+- `express` - Web-Framework
+- `sqlite3` - Datenbank
+- `cors` - Cross-Origin Resource Sharing
 
-react - UI-Framework
-typescript - Typsicherheit
-d3 - Datenvisualisierung
-vite - Build-Tool
+### Frontend
+- `react` - UI-Framework
+- `typescript` - Typsicherheit
+- `d3` - Datenvisualisierung
+- `vite` - Build-Tool
 
-🗃️ Datenbankstruktur
+## 🗃️ Datenbankstruktur
+
 Die SQLite-Datenbank enthält drei Tabellen:
-Branch
 
-id - Eindeutige ID
-name - Name der Teilstreitkraft
-description - Beschreibung
+### Branch
+- `id` - Eindeutige ID
+- `name` - Name der Teilstreitkraft
+- `description` - Beschreibung
 
-Unit
+### Unit
+- `id` - Eindeutige ID
+- `name` - Name der Einheit
+- `type` - Typ (Command, Division, Brigade, Wing, etc.)
+- `parent_unit_id` - Referenz zur übergeordneten Einheit
+- `branch_id` - Referenz zur Teilstreitkraft
 
-id - Eindeutige ID
-name - Name der Einheit
-type - Typ (Command, Division, Brigade, Wing, etc.)
-parent_unit_id - Referenz zur übergeordneten Einheit
-branch_id - Referenz zur Teilstreitkraft
+### Personnel
+- `id` - Eindeutige ID
+- `name` - Name des Offiziers
+- `rank` - Rang
+- `position` - Position/Funktion
+- `unit_id` - Referenz zur Einheit
 
-Personnel
+## 🎯 Verwendung
 
-id - Eindeutige ID
-name - Name des Offiziers
-rank - Rang
-position - Position/Funktion
-unit_id - Referenz zur Einheit
+### 1. Datenbank initialisieren
 
-🎯 Verwendung
-1. Datenbank initialisieren
-Beim ersten Start des Backend-Servers wird automatisch die Datenbank erstellt und mit Daten aus schema.sql gefüllt.
-Wichtig: Falls Probleme auftreten:
-bash# Datenbank zurücksetzen
+Beim ersten Start des Backend-Servers wird automatisch die Datenbank erstellt und mit Daten aus `schema.sql` gefüllt.
+
+**Wichtig:** Falls Probleme auftreten:
+```bash
+# Datenbank zurücksetzen
 rm database.db
-2. Backend starten
-bashcd backend
+```
+
+### 2. Backend starten
+```bash
+cd backend
 node server.js
-Der Server läuft auf http://localhost:4000
-3. Frontend starten
-bashcd frontend
+```
+
+Der Server läuft auf `http://localhost:4000`
+
+### 3. Frontend starten
+```bash
+cd frontend
 npm run dev
-Das Frontend ist erreichbar unter http://localhost:5173
-🎨 Features
+```
 
-Interaktives Zoomen & Scrollen - Navigiere durch die große Hierarchie
-Farbcodierung nach Branch - Sofortige visuelle Unterscheidung der Teilstreitkräfte
-Hover-Tooltips - Zusätzliche Informationen beim Überfahren von Nodes
-Hierarchische Darstellung - Klare Visualisierung der Kommandostruktur
-Responsive Layout - Passt sich verschiedenen Bildschirmgrößen an
+Das Frontend ist erreichbar unter `http://localhost:5173`
 
-📊 API-Endpunkte
-GET /units
+## 🎨 Features
+
+- **Interaktives Zoomen & Scrollen** - Navigiere durch die große Hierarchie
+- **Farbcodierung nach Branch** - Sofortige visuelle Unterscheidung der Teilstreitkräfte
+- **Hover-Tooltips** - Zusätzliche Informationen beim Überfahren von Nodes
+- **Hierarchische Darstellung** - Klare Visualisierung der Kommandostruktur
+- **Responsive Layout** - Passt sich verschiedenen Bildschirmgrößen an
+
+## 📊 API-Endpunkte
+
+### GET /units
 Gibt alle militärischen Einheiten zurück.
-Response:
-json[
+
+**Response:**
+```json
+[
   {
     "id": 1,
     "name": "Ground Component Command",
@@ -93,18 +119,26 @@ json[
     "branch_id": 1
   }
 ]
-GET /branches
+```
+
+### GET /branches
 Gibt alle Teilstreitkräfte zurück.
-Response:
-json[
+
+**Response:**
+```json
+[
   {
     "id": 1,
     "name": "Japan Ground Self-Defense Force",
     "description": "Landstreitkräfte der JSDF"
   }
 ]
-🛠️ Entwicklung
-Projekt-Struktur
+```
+
+## 🛠️ Entwicklung
+
+### Projekt-Struktur
+```
 .
 ├── backend/
 │   ├── server.js          # Express-Server
@@ -117,36 +151,46 @@ Projekt-Struktur
     │   ├── main.tsx       # React-Einstiegspunkt
     │   └── index.css      # Globale Styles
     └── package.json
-Datenbank neu initialisieren
-bashcd backend
+```
+
+### Datenbank neu initialisieren
+```bash
+cd backend
 rm database.db
 node server.js
-Debugging
+```
+
+### Debugging
+
 Die Frontend-Konsole zeigt detaillierte Logs:
+- Geladene Units
+- Hierarchie-Aufbau
+- Rendering-Status
 
-Geladene Units
-Hierarchie-Aufbau
-Rendering-Status
+## 🐛 Troubleshooting
 
-🐛 Troubleshooting
-"Fehler beim Erstellen des Organigramms: cycle"
+### "Fehler beim Erstellen des Organigramms: cycle"
 Die Datenbank enthält zyklische Referenzen. Lösung:
+1. Backend stoppen
+2. `database.db` löschen
+3. Backend neu starten
 
-Backend stoppen
-database.db löschen
-Backend neu starten
-
-"Keine Units gefunden"
+### "Keine Units gefunden"
 Backend-Server läuft nicht oder falsche URL. Überprüfe:
+- Ist der Server auf Port 4000 gestartet?
+- Gibt `http://localhost:4000/units` Daten zurück?
 
-Ist der Server auf Port 4000 gestartet?
-Gibt http://localhost:4000/units Daten zurück?
-
-CORS-Fehler
+### CORS-Fehler
 Stelle sicher, dass das Backend mit aktiviertem CORS läuft.
-📝 Lizenz
-Dieses Projekt dient zu Bildungszwecken und ist frei verwendbar.
-👥 Autoren
-Entwickelt für die Visualisierung militärischer Organisationsstrukturen.
 
-Hinweis: Die dargestellten Daten sind vereinfacht und dienen nur zu Demonstrationszwecken.
+## 📝 Lizenz
+
+Dieses Projekt dient zu Bildungszwecken und ist frei verwendbar.
+
+## 👥 Autoren
+
+Martin Stanev & Nemanja Nesic
+
+---
+
+**Hinweis:** Die dargestellten Daten sind vereinfacht und dienen nur zu Demonstrationszwecken.
