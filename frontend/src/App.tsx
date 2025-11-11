@@ -73,8 +73,6 @@ export default function App() {
       const nodes = treeData.descendants();
       const links = treeData.links();
 
-      
-
       const node = svgGroup.selectAll("g.node")
         .data(nodes, (d: any) => d.id || (d.id = ++i));
 
@@ -90,18 +88,50 @@ export default function App() {
         .attr("r", 1e-6)
         .style("fill", (d: any) => d._children ? "lightsteelblue" : "#fff");
 
-      nodeEnter.append("foreignObject")
-        .attr("width", 150)
-        .attr("height", 50)
-        .attr("x", (d: any) => d.children || d._children ? -170 : 20)
-        .attr("y", -25)
-        .append("xhtml:div")
-        .style("padding", "5px")
-        .style("background-color", "white")
-        .style("border", "1px solid #999")
-        .style("border-radius", "5px")
-        .style("font", "12px sans-serif")
-        .html((d: any) => d.data.name);
+      // Add text first to measure it
+      const textElement = nodeEnter.append("text")
+        .attr("dy", ".35em")
+        .attr("x", (d: any) => d.children || d._children ? -13 : 13)
+        .attr("text-anchor", (d: any) => d.children || d._children ? "end" : "start")
+        .text((d: any) => d.data.name)
+        .style("fill", "#333")
+        .style("font", "14px sans-serif")
+        .style("font-weight", "500")
+        .style("pointer-events", "none");
+
+      // Add background rect for each text
+      nodeEnter.insert("rect", "text")
+        .attr("class", "text-bg")
+        .attr("x", function(this: any, d: any) {
+          const textNode = d3.select(this.parentNode).select("text").node() as SVGTextElement;
+          if (!textNode) return 0;
+          const bbox = textNode.getBBox();
+          return d.children || d._children ? bbox.x - 5 : bbox.x - 5;
+        })
+        .attr("y", function(this: any) {
+          const textNode = d3.select(this.parentNode).select("text").node() as SVGTextElement;
+          if (!textNode) return 0;
+          const bbox = textNode.getBBox();
+          return bbox.y - 2;
+        })
+        .attr("width", function(this: any) {
+          const textNode = d3.select(this.parentNode).select("text").node() as SVGTextElement;
+          if (!textNode) return 0;
+          const bbox = textNode.getBBox();
+          return bbox.width + 10;
+        })
+        .attr("height", function(this: any) {
+          const textNode = d3.select(this.parentNode).select("text").node() as SVGTextElement;
+          if (!textNode) return 0;
+          const bbox = textNode.getBBox();
+          return bbox.height + 4;
+        })
+        .style("fill", "white")
+        .style("stroke", "#999")
+        .style("stroke-width", "1px")
+        .style("rx", "5")
+        .style("ry", "5")
+        .style("opacity", 0.95);
 
       const nodeUpdate = nodeEnter.merge(node as any);
 
@@ -127,7 +157,8 @@ export default function App() {
         .remove();
 
       nodeExit.select("circle").attr("r", 1e-6);
-      nodeExit.select("foreignObject").style("opacity", 1e-6);
+      nodeExit.select("text").style("fill-opacity", 1e-6);
+      nodeExit.select(".text-bg").style("opacity", 1e-6);
 
       const linkGenerator = d3.linkHorizontal<any, any>().x(d => d.y).y(d => d.x);
 
