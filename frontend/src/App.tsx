@@ -14,6 +14,62 @@ interface Unit {
 export default function App() {
   const [units, setUnits] = useState<Unit[]>([]);
   const chartRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
+  // Function to download as SVG
+  const downloadSVG = () => {
+    if (!svgRef.current) return;
+    
+    const svgData = svgRef.current.outerHTML;
+    const blob = new Blob([svgData], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "jsdf-organigramm.svg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Function to download as PNG
+  const downloadPNG = () => {
+    if (!svgRef.current) return;
+
+    const svgData = new XMLSerializer().serializeToString(svgRef.current);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+
+    // Set canvas size to match SVG
+    canvas.width = 4000;
+    canvas.height = 4000;
+
+    img.onload = () => {
+      if (ctx) {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "jsdf-organigramm.png";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }
+        });
+      }
+    };
+
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    img.src = url;
+  };
 
   useEffect(() => {
     fetch("http://localhost:4000/units")
@@ -54,6 +110,9 @@ export default function App() {
       .append("svg")
       .attr("width", 4000)
       .attr("height", 4000);
+
+    // Store reference to SVG element
+    svgRef.current = svg.node();
 
     const svgGroup = svg.append("g").attr("transform", "translate(200,100)");
 
@@ -223,6 +282,37 @@ export default function App() {
       <p className="chart-subtitle">
         Scrollen & Zoomen möglich. Klicken zum Auf- und Zuklappen.
       </p>
+      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <button 
+          onClick={downloadSVG}
+          style={{
+            marginRight: "0.5rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px"
+          }}
+        >
+          📥 Als SVG speichern
+        </button>
+        <button 
+          onClick={downloadPNG}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: "#2196F3",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "14px"
+          }}
+        >
+          📥 Als PNG speichern
+        </button>
+      </div>
       <div className="chart-container">
         <div ref={chartRef} />
       </div>
